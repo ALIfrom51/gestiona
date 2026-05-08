@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Management Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0a0e27;
+            --secondary: #1a1f3a;
+            --accent: #ff6b6b;
+            --accent-light: #ffa5a5;
+            --text: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border: #2d3142;
+            --success: #51cf66;
+            --warning: #ffd43b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ==================== LOGIN PAGE ==================== */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-box {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+        }
+
+        .login-error {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--accent);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--accent);
+            display: none;
+        }
+
+        .login-info {
+            background: rgba(81, 207, 102, 0.1);
+            color: var(--success);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--success);
+            font-size: 0.9rem;
+        }
+
+        /* ==================== DASHBOARD PAGE ==================== */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--secondary);
+            padding: 2rem 1.5rem;
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-info {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            display: inline-block;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.8rem;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text);
+            background: rgba(255, 107, 107, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        .nav-link.disabled {
+            color: var(--text-secondary);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-stat {
+            background: var(--secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .card-stat:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .card-stat-title {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .table-container {
+            background: var(--secondary);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            background: rgba(255, 107, 107, 0.05);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 1.2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: rgba(255, 107, 107, 0.05);
+        }
+
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-success {
+            background: rgba(81, 207, 102, 0.2);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--accent);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 107, 107, 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .action-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .form-container {
+            background: var(--secondary);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            animation: slideDown 0.3s ease;
+        }
+
+        .alert-success {
+            background: rgba(81, 207, 102, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .alert-error {
+            background: rgba(255, 107, 107, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .access-denied {
+            background: rgba(255, 107, 107, 0.1);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .access-denied h2 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .access-denied p {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 1rem;
+                position: static;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .login-box {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN PAGE -->
+    <div id="login-page" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">📚 Internship</div>
+            <div class="login-subtitle">Management Platform</div>
+
+            <div class="login-info">
+                <strong>Comptes Test:</strong><br>
+                RH: rh_jean / password123<br>
+                Encadrant: encadrant_pierre / password123<br>
+                Admin: admin / admin123
+            </div>
+
+            <div class="login-error" id="login-error"></div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Nom d'utilisateur</label>
+                    <input type="text" id="username" placeholder="ex: rh_jean" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="password" placeholder="••••••••" required autocomplete="off">
+                </div>
+                <button type="submit" class="btn btn-login">Se connecter</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboard-page" class="container" style="display: none;">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="logo">📚 Internship</div>
+
+            <div class="user-info">
+                <div class="user-name" id="sidebar-user-name">User</div>
+                <span class="user-role" id="sidebar-user-role">ROLE</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a class="nav-link active" data-section="dashboard">📊 Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="stagiaires">👥 Stagiaires</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="candidatures">📋 Candidatures</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="encadrants">🎓 Encadrants</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-section="rh">👔 Ressources Humaines</a>
+                </li>
+            </ul>
+
+            <button class="logout-btn" onclick="handleLogout()">Déconnexion</button>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+            <!-- DASHBOARD SECTION -->
+            <section id="dashboard" class="section active">
+                <div class="header">
+                    <h1>Dashboard</h1>
+                </div>
+
+                <div id="alert-container"></div>
+
+                <div class="cards-grid">
+                    <div class="card-stat">
+                        <div class="card-stat-title">Stagiaires Actifs</div>
+                        <div class="card-stat-value" id="count-stagiaires">0</div>
+                    </div>
+                    <div class="card-stat">
+                        <div class="card-stat-title">Candidatures</div>
+                        <div class="card-stat-value" id="count-candidatures">0</div>
+                    </div>
+                    <div class="card-stat">
+                        <div class="card-stat-title">Encadrants</div>
+                        <div class="card-stat-value" id="count-encadrants">0</div>
+                    </div>
+                    <div class="card-stat">
+                        <div class="card-stat-title">Responsables RH</div>
+                        <div class="card-stat-value" id="count-rh">0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STAGIAIRES SECTION -->
+            <section id="stagiaires" class="section" style="display: none;">
+                <div class="header">
+                    <h1>Gestion Stagiaires</h1>
+                    <div id="stagiaires-actions"></div>
+                </div>
+
+                <div id="alert-container-stagiaires"></div>
+
+                <div class="form-container" id="form-stagiaire">
+                    <h3>Nouveau Stagiaire</h3>
+                    <form onsubmit="addStagiaire(event)">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" id="nom-stagiaire" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <input type="text" id="prenom-stagiaire" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Domaine</label>
+                            <input type="text" id="domaine-stagiaire" placeholder="ex: Informatique">
+                        </div>
+                        <div class="form-group">
+                            <label>Responsable RH</label>
+                            <select id="idrh-stagiaire" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Encadrant</label>
+                            <select id="idencadrant-stagiaire" required></select>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary">Créer</button>
+                            <button type="button" class="btn btn-secondary" onclick="toggleForm('form-stagiaire')">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Stagiaires</h2>
+                    </div>
+                    <table id="table-stagiaires">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom Complet</th>
+                                <th>Domaine</th>
+                                <th>Statut</th>
+                                <th>RH</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CANDIDATURES SECTION -->
+            <section id="candidatures" class="section" style="display: none;">
+                <div class="header">
+                    <h1>Gestion Candidatures</h1>
+                    <div id="candidatures-actions"></div>
+                </div>
+
+                <div id="alert-container-candidatures"></div>
+
+                <div class="form-container" id="form-candidature">
+                    <h3>Nouvelle Candidature</h3>
+                    <form onsubmit="addCandidature(event)">
+                        <div class="form-group">
+                            <label>Stagiaire</label>
+                            <select id="numero-candidature" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Statut</label>
+                            <select id="statut-candidature" required>
+                                <option value="Pending">En attente</option>
+                                <option value="Acceptée">Acceptée</option>
+                                <option value="Rejetée">Rejetée</option>
+                            </select>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary">Créer</button>
+                            <button type="button" class="btn btn-secondary" onclick="toggleForm('form-candidature')">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Candidatures</h2>
+                    </div>
+                    <table id="table-candidatures">
+                        <thead>
+                            <tr>
+                                <th>ID Candidat</th>
+                                <th>Stagiaire</th>
+                                <th>Domaine</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ENCADRANTS SECTION -->
+            <section id="encadrants" class="section" style="display: none;">
+                <div class="header">
+                    <h1>Gestion Encadrants</h1>
+                    <div id="encadrants-actions"></div>
+                </div>
+
+                <div id="alert-container-encadrants"></div>
+
+                <div class="form-container" id="form-encadrant">
+                    <h3>Nouvel Encadrant</h3>
+                    <form onsubmit="addEncadrant(event)">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" id="nom-encadrant" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <input type="text" id="prenom-encadrant" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Responsable RH</label>
+                            <select id="idrh-encadrant"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Remarque</label>
+                            <textarea id="remarque-encadrant" rows="3"></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary">Créer</button>
+                            <button type="button" class="btn btn-secondary" onclick="toggleForm('form-encadrant')">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Encadrants</h2>
+                    </div>
+                    <table id="table-encadrants">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom Complet</th>
+                                <th>Responsable RH</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- RH SECTION -->
+            <section id="rh" class="section" style="display: none;">
+                <div class="header">
+                    <h1>Ressources Humaines</h1>
+                    <div id="rh-actions"></div>
+                </div>
+
+                <div id="alert-container-rh"></div>
+
+                <div class="form-container" id="form-rh">
+                    <h3>Nouveau Responsable RH</h3>
+                    <form onsubmit="addRH(event)">
+                        <div class="form-group">
+                            <label>Nom</label>
+                            <input type="text" id="nom-rh" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Prénom</label>
+                            <input type="text" id="prenom-rh" required>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary">Créer</button>
+                            <button type="button" class="btn btn-secondary" onclick="toggleForm('form-rh')">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Responsables RH</h2>
+                    </div>
+                    <table id="table-rh">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom Complet</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let currentUser = null;
+        let currentToken = null;
+
+        // ==================== AUTH ====================
+
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('login-error');
+
+            fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.error) {
+                    errorDiv.textContent = 'Identifiants invalides';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                currentToken = data.token;
+                currentUser = data.user;
+                
+                localStorage.setItem('token', currentToken);
+                localStorage.setItem('user', JSON.stringify(currentUser));
+
+                showDashboard();
+            })
+            .catch(err => {
+                errorDiv.textContent = 'Erreur de connexion';
+                errorDiv.style.display = 'block';
+            });
+        }
+
+        function handleLogout() {
+            currentToken = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('dashboard-page').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function showDashboard() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('dashboard-page').style.display = 'flex';
+
+            document.getElementById('sidebar-user-name').textContent = 
+                `${currentUser.firstname} ${currentUser.lastname}`;
+            document.getElementById('sidebar-user-role').textContent = currentUser.role;
+
+            setupNavigation();
+            updateMenuPermissions();
+            loadDashboardStats();
+        }
+
+        function restoreSession() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+
+            if (token && user) {
+                currentToken = token;
+                currentUser = JSON.parse(user);
+                showDashboard();
+            }
+        }
+
+        // ==================== PERMISSIONS ====================
+
+        const PERMISSIONS = {
+            ADMIN: ['dashboard', 'stagiaires', 'candidatures', 'encadrants', 'rh'],
+            RH: ['dashboard', 'stagiaires', 'candidatures', 'encadrants', 'rh'],
+            ENCADRANT: ['dashboard', 'stagiaires'],
+            STAGIAIRE: ['dashboard']
+        };
+
+        const CAN_ADD = {
+            ADMIN: { stagiaires: true, candidatures: true, encadrants: true, rh: true },
+            RH: { stagiaires: true, candidatures: true, encadrants: true, rh: true },
+            ENCADRANT: {},
+            STAGIAIRE: {}
+        };
+
+        function hasPermission(section) {
+            return PERMISSIONS[currentUser.role]?.includes(section) || false;
+        }
+
+        function canAdd(section) {
+            return CAN_ADD[currentUser.role]?.[section] || false;
+        }
+
+        function updateMenuPermissions() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const section = link.dataset.section;
+                if (!hasPermission(section)) {
+                    link.classList.add('disabled');
+                    link.onclick = (e) => {
+                        e.preventDefault();
+                        return false;
+                    };
+                }
+            });
+        }
+
+        // ==================== NAVIGATION ====================
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-link:not(.disabled)').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = link.dataset.section;
+                    
+                    if (!hasPermission(sectionId)) {
+                        showAccessDenied(sectionId);
+                        return;
+                    }
+                    
+                    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+                    document.getElementById(sectionId).style.display = 'block';
+                    
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                    
+                    loadData(sectionId);
+                });
+            });
+        }
+
+        function showAccessDenied(section) {
+            const container = document.querySelector('main');
+            container.innerHTML = `
+                <div class="access-denied">
+                    <h2>Accès Refusé</h2>
+                    <p>Votre rôle (${currentUser.role}) n'a pas accès à cette section.</p>
+                </div>
+            `;
+        }
+
+        function toggleForm(formId) {
+            document.getElementById(formId).classList.toggle('active');
+        }
+
+        // ==================== DATA LOADING ====================
+
+        async function loadData(section) {
+            try {
+                if (section === 'dashboard') {
+                    loadDashboardStats();
+                } else if (section === 'stagiaires') {
+                    await loadStagiaires();
+                    if (canAdd('stagiaires')) {
+                        document.getElementById('stagiaires-actions').innerHTML = 
+                            '<button class="btn btn-primary" onclick="toggleForm(\'form-stagiaire\')">+ Ajouter Stagiaire</button>';
+                        await loadRHSelect('idrh-stagiaire');
+                        await loadEncadrantsSelect();
+                    }
+                } else if (section === 'candidatures') {
+                    await loadCandidatures();
+                    if (canAdd('candidatures')) {
+                        document.getElementById('candidatures-actions').innerHTML = 
+                            '<button class="btn btn-primary" onclick="toggleForm(\'form-candidature\')">+ Ajouter Candidature</button>';
+                        await loadStagiairesSelect();
+                    }
+                } else if (section === 'encadrants') {
+                    await loadEncadrants();
+                    if (canAdd('encadrants')) {
+                        document.getElementById('encadrants-actions').innerHTML = 
+                            '<button class="btn btn-primary" onclick="toggleForm(\'form-encadrant\')">+ Ajouter Encadrant</button>';
+                        await loadRHSelect('idrh-encadrant');
+                    }
+                } else if (section === 'rh') {
+                    await loadRH();
+                    if (canAdd('rh')) {
+                        document.getElementById('rh-actions').innerHTML = 
+                            '<button class="btn btn-primary" onclick="toggleForm(\'form-rh\')">+ Ajouter RH</button>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        // ==================== API CALLS ====================
+
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${currentToken}`
+            };
+        }
+
+        async function loadDashboardStats() {
+            try {
+                const headers = getHeaders();
+                const [stagiaires, candidatures, encadrants, rh] = await Promise.all([
+                    fetch(`${API_URL}/stagiaires`, { headers }).then(r => r.json()).catch(() => []),
+                    fetch(`${API_URL}/candidatures`, { headers }).then(r => r.json()).catch(() => []),
+                    fetch(`${API_URL}/encadrants`, { headers }).then(r => r.json()).catch(() => []),
+                    fetch(`${API_URL}/rh`, { headers }).then(r => r.json()).catch(() => [])
+                ]);
+
+                document.getElementById('count-stagiaires').textContent = Array.isArray(stagiaires) ? stagiaires.length : 0;
+                document.getElementById('count-candidatures').textContent = Array.isArray(candidatures) ? candidatures.length : 0;
+                document.getElementById('count-encadrants').textContent = Array.isArray(encadrants) ? encadrants.length : 0;
+                document.getElementById('count-rh').textContent = Array.isArray(rh) ? rh.length : 0;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadStagiaires() {
+            try {
+                const response = await fetch(`${API_URL}/stagiaires`, { headers: getHeaders() });
+                const stagiaires = await response.json();
+                const tbody = document.querySelector('#table-stagiaires tbody');
+                tbody.innerHTML = '';
+
+                (Array.isArray(stagiaires) ? stagiaires : []).forEach(s => {
+                    const statusClass = s.SATATUSSTAGIAIRE === 'Validé' ? 'status-success' : 'status-pending';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${s.NUMERO}</td>
+                            <td>${s.NOMSTAGIAIRE} ${s.PRENOMSTAGIAIRE}</td>
+                            <td>${s.DOMAINE || '-'}</td>
+                            <td><span class="status-badge ${statusClass}">${s.SATATUSSTAGIAIRE || 'Pending'}</span></td>
+                            <td>${s.NOMRH || '-'}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    ${canAdd('stagiaires') ? `<button class="action-btn" onclick="deleteStagiaire(${s.NUMERO})">Supprimer</button>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadCandidatures() {
+            try {
+                const response = await fetch(`${API_URL}/candidatures`, { headers: getHeaders() });
+                const candidatures = await response.json();
+                const tbody = document.querySelector('#table-candidatures tbody');
+                tbody.innerHTML = '';
+
+                (Array.isArray(candidatures) ? candidatures : []).forEach(c => {
+                    const statusClass = c.STATUSCANDIDATURE === 'Acceptée' ? 'status-success' : 'status-pending';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${c.NUMERODECANDIDAT}</td>
+                            <td>${c.NOMSTAGIAIRE || '-'} ${c.PRENOMSTAGIAIRE || '-'}</td>
+                            <td>${c.DOMAINE || '-'}</td>
+                            <td><span class="status-badge ${statusClass}">${c.STATUSCANDIDATURE}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    ${canAdd('candidatures') ? `<button class="action-btn" onclick="deleteCandidature(${c.NUMERODECANDIDAT})">Supprimer</button>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadEncadrants() {
+            try {
+                const response = await fetch(`${API_URL}/encadrants`, { headers: getHeaders() });
+                const encadrants = await response.json();
+                const tbody = document.querySelector('#table-encadrants tbody');
+                tbody.innerHTML = '';
+
+                (Array.isArray(encadrants) ? encadrants : []).forEach(e => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${e.IDENCADRANT}</td>
+                            <td>${e.NOMENCADRANT} ${e.PRENOMENCADRANT}</td>
+                            <td>${e.NOMRH || '-'}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    ${canAdd('encadrants') ? `<button class="action-btn" onclick="deleteEncadrant(${e.IDENCADRANT})">Supprimer</button>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadRH() {
+            try {
+                const response = await fetch(`${API_URL}/rh`, { headers: getHeaders() });
+                const rh_list = await response.json();
+                const tbody = document.querySelector('#table-rh tbody');
+                tbody.innerHTML = '';
+
+                (Array.isArray(rh_list) ? rh_list : []).forEach(r => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${r.IDRH}</td>
+                            <td>${r.NOMRH} ${r.PRENOMRH}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    ${canAdd('rh') ? `<button class="action-btn" onclick="deleteRH(${r.IDRH})">Supprimer</button>` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadRHSelect(selectId) {
+            try {
+                const response = await fetch(`${API_URL}/rh`, { headers: getHeaders() });
+                const rh_list = await response.json();
+                const select = document.getElementById(selectId);
+                select.innerHTML = '<option value="">Sélectionner un RH</option>';
+
+                (Array.isArray(rh_list) ? rh_list : []).forEach(r => {
+                    select.innerHTML += `<option value="${r.IDRH}">${r.NOMRH} ${r.PRENOMRH}</option>`;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadEncadrantsSelect() {
+            try {
+                const response = await fetch(`${API_URL}/encadrants`, { headers: getHeaders() });
+                const encadrants = await response.json();
+                const select = document.getElementById('idencadrant-stagiaire');
+                select.innerHTML = '<option value="">Sélectionner un encadrant</option>';
+
+                (Array.isArray(encadrants) ? encadrants : []).forEach(e => {
+                    select.innerHTML += `<option value="${e.IDENCADRANT}">${e.NOMENCADRANT} ${e.PRENOMENCADRANT}</option>`;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function loadStagiairesSelect() {
+            try {
+                const response = await fetch(`${API_URL}/stagiaires`, { headers: getHeaders() });
+                const stagiaires = await response.json();
+                const select = document.getElementById('numero-candidature');
+                select.innerHTML = '<option value="">Sélectionner un stagiaire</option>';
+
+                (Array.isArray(stagiaires) ? stagiaires : []).forEach(s => {
+                    select.innerHTML += `<option value="${s.NUMERO}">${s.NOMSTAGIAIRE} ${s.PRENOMSTAGIAIRE}</option>`;
+                });
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function showAlert(message, type = 'success', container = 'alert-container') {
+            const alertDiv = document.getElementById(container);
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertDiv.appendChild(alert);
+            
+            setTimeout(() => alert.remove(), 3000);
+        }
+
+        // ==================== CRUD OPERATIONS ====================
+
+        async function addStagiaire(e) {
+            e.preventDefault();
+            
+            const data = {
+                NUMERO: Math.floor(Math.random() * 100000),
+                NOMSTAGIAIRE: document.getElementById('nom-stagiaire').value,
+                PRENOMSTAGIAIRE: document.getElementById('prenom-stagiaire').value,
+                DOMAINE: document.getElementById('domaine-stagiaire').value,
+                IDRH: document.getElementById('idrh-stagiaire').value,
+                IDENCADRANT: document.getElementById('idencadrant-stagiaire').value,
+                SATATUSSTAGIAIRE: 'En cours'
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/stagiaires`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showAlert('Stagiaire créé avec succès', 'success', 'alert-container-stagiaires');
+                    toggleForm('form-stagiaire');
+                    await loadStagiaires();
+                    e.target.reset();
+                } else if (response.status === 403) {
+                    showAlert('Accès refusé', 'error', 'alert-container-stagiaires');
+                }
+            } catch (error) {
+                showAlert('Erreur: ' + error.message, 'error', 'alert-container-stagiaires');
+            }
+        }
+
+        async function deleteStagiaire(numero) {
+            if (confirm('Confirmer suppression?')) {
+                try {
+                    const response = await fetch(`${API_URL}/stagiaires/${numero}`, {
+                        method: 'DELETE',
+                        headers: getHeaders()
+                    });
+                    if (response.ok) {
+                        showAlert('Stagiaire supprimé', 'success', 'alert-container-stagiaires');
+                        await loadStagiaires();
+                    }
+                } catch (error) {
+                    showAlert('Erreur: ' + error.message, 'error', 'alert-container-stagiaires');
+                }
+            }
+        }
+
+        async function addCandidature(e) {
+            e.preventDefault();
+            
+            const data = {
+                NUMERODECANDIDAT: Math.floor(Math.random() * 100000),
+                NUMERO: document.getElementById('numero-candidature').value,
+                STATUSCANDIDATURE: document.getElementById('statut-candidature').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/candidatures`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showAlert('Candidature créée', 'success', 'alert-container-candidatures');
+                    toggleForm('form-candidature');
+                    await loadCandidatures();
+                    e.target.reset();
+                } else if (response.status === 403) {
+                    showAlert('Accès refusé', 'error', 'alert-container-candidatures');
+                }
+            } catch (error) {
+                showAlert('Erreur: ' + error.message, 'error', 'alert-container-candidatures');
+            }
+        }
+
+        async function deleteCandidature(id) {
+            if (confirm('Confirmer suppression?')) {
+                try {
+                    const response = await fetch(`${API_URL}/candidatures/${id}`, {
+                        method: 'DELETE',
+                        headers: getHeaders()
+                    });
+                    if (response.ok) {
+                        showAlert('Candidature supprimée', 'success', 'alert-container-candidatures');
+                        await loadCandidatures();
+                    }
+                } catch (error) {
+                    showAlert('Erreur: ' + error.message, 'error', 'alert-container-candidatures');
+                }
+            }
+        }
+
+        async function addEncadrant(e) {
+            e.preventDefault();
+            
+            const data = {
+                IDENCADRANT: Math.floor(Math.random() * 100000),
+                NOMENCADRANT: document.getElementById('nom-encadrant').value,
+                PRENOMENCADRANT: document.getElementById('prenom-encadrant').value,
+                IDRH: document.getElementById('idrh-encadrant').value,
+                REMARQUE: document.getElementById('remarque-encadrant').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/encadrants`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showAlert('Encadrant créé', 'success', 'alert-container-encadrants');
+                    toggleForm('form-encadrant');
+                    await loadEncadrants();
+                    e.target.reset();
+                } else if (response.status === 403) {
+                    showAlert('Accès refusé', 'error', 'alert-container-encadrants');
+                }
+            } catch (error) {
+                showAlert('Erreur: ' + error.message, 'error', 'alert-container-encadrants');
+            }
+        }
+
+        async function deleteEncadrant(id) {
+            if (confirm('Confirmer suppression?')) {
+                try {
+                    const response = await fetch(`${API_URL}/encadrants/${id}`, {
+                        method: 'DELETE',
+                        headers: getHeaders()
+                    });
+                    if (response.ok) {
+                        showAlert('Encadrant supprimé', 'success', 'alert-container-encadrants');
+                        await loadEncadrants();
+                    }
+                } catch (error) {
+                    showAlert('Erreur: ' + error.message, 'error', 'alert-container-encadrants');
+                }
+            }
+        }
+
+        async function addRH(e) {
+            e.preventDefault();
+            
+            const data = {
+                IDRH: Math.floor(Math.random() * 100000),
+                NOMRH: document.getElementById('nom-rh').value,
+                PRENOMRH: document.getElementById('prenom-rh').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/rh`, {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    showAlert('RH créé', 'success', 'alert-container-rh');
+                    toggleForm('form-rh');
+                    await loadRH();
+                    e.target.reset();
+                } else if (response.status === 403) {
+                    showAlert('Accès refusé', 'error', 'alert-container-rh');
+                }
+            } catch (error) {
+                showAlert('Erreur: ' + error.message, 'error', 'alert-container-rh');
+            }
+        }
+
+        async function deleteRH(id) {
+            if (confirm('Confirmer suppression?')) {
+                try {
+                    const response = await fetch(`${API_URL}/rh/${id}`, {
+                        method: 'DELETE',
+                        headers: getHeaders()
+                    });
+                    if (response.ok) {
+                        showAlert('RH supprimé', 'success', 'alert-container-rh');
+                        await loadRH();
+                    }
+                } catch (error) {
+                    showAlert('Erreur: ' + error.message, 'error', 'alert-container-rh');
+                }
+            }
+        }
+
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            restoreSession();
+        });
+    </script>
+</body>
+</html>
