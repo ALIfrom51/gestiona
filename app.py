@@ -22,9 +22,9 @@ JWT_ALGORITHM = 'HS256'
 
 # MySQL Config
 db_config = {
-    'host': os.getenv('MYSQL_HOST', 'localhost'),
+    'host': os.getenv('MYSQL_HOST', 'db-1'),
     'user': os.getenv('MYSQL_USER', 'root'),
-    'password': os.getenv('MYSQL_PASSWORD', ''),
+    'password': os.getenv('MYSQL_PASSWORD', 'root'),
     'database': os.getenv('MYSQL_DATABASE', 'internship_db'),
     'use_pure': True
 }
